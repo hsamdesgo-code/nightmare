@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050000">
+<title>NIGHTMARE | Security Console</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#030303;color:#eee;font-family:Consolas,monospace;min-height:100vh;overflow:hidden}
+main{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse,#280000,#080000 55%,#000)}
+.panel{width:min(720px,100%);padding:30px 22px;border:1px solid #8c1010;background:#090303;box-shadow:0 0 35px #9005;text-align:center}
+.brand{color:#f44;letter-spacing:5px;font-size:13px}
+h1{font-size:clamp(32px,8vw,65px);color:#ff2525;text-shadow:0 0 20px red;margin:25px 0 10px}
+.sub{color:#aaa;font-size:14px}
+.bar{height:9px;background:#260909;border:1px solid #711;margin:25px 0 10px}
+#fill{height:100%;width:0;background:#f22;box-shadow:0 0 15px red}
+.meta{display:flex;justify-content:space-between;color:#f77;font-size:12px}
+#logs{height:130px;text-align:left;color:#aaa;font-size:12px;line-height:2;overflow:hidden;margin-top:20px}
+#logs div:before{content:"> ";color:red}
+#warning{display:none;color:red;font-size:clamp(25px,6vw,40px);font-weight:bold;margin-top:20px;animation:blink .7s infinite}
+#reveal{display:none;border-top:1px solid #444;margin-top:25px;padding-top:20px}
+#reveal h2{color:#42ff91;font-size:clamp(27px,7vw,45px)}
+button{background:#260707;border:1px solid #d22;color:white;padding:13px 20px;font:inherit;margin:8px;cursor:pointer}
+button:hover{background:#650000}
+#count{font-size:55px;color:#f33;margin:10px}
+footer{position:fixed;bottom:9px;left:0;right:0;text-align:center;color:#555;font-size:10px}
+@keyframes blink{50%{opacity:.25}}
+.glitch{animation:shake .12s 5}
+@keyframes shake{25%{transform:translate(3px)}50%{transform:translate(-3px)}75%{transform:translate(2px)}}
+</style>
+</head>
+<body>
+<main>
+<section class="panel" id="panel">
+<div class="brand">NIGHTMARE SECURITY SYSTEM</div>
+<h1 id="title">INITIALIZING</h1>
+<p class="sub" id="subtitle">Establishing simulated security session...</p>
+<div class="bar"><div id="fill"></div></div>
+<div class="meta"><span id="status">CONNECTING</span><span id="percent">0%</span></div>
+<div id="logs"></div>
+<div id="warning">⚠ SYSTEM BREACHED ⚠</div>
+<div id="count"></div>
+<div id="reveal">
+<h2>JUST KIDDING! 😂</h2>
+<h3>YOU HAVE BEEN PRANKED!</h3>
+<p>Your device is completely safe.</p>
+<p>No files accessed. Nothing was hacked.</p>
+<button onclick="celebrate()">OKAY, YOU GOT ME 😂</button>
+</div>
+<button id="sound">SOUND OFF 🔇</button>
+<button id="full">FULLSCREEN ⛶</button>
+</section>
+</main>
+<footer>VISUAL SIMULATION ONLY • NO DATA COLLECTED</footer>
+<script>
+const $=id=>document.getElementById(id);
+const messages=[
+"Initializing virtual environment...",
+"Establishing simulated connection...",
+"Analyzing fictional security layers...",
+"Running visual diagnostics...",
+"Checking demonstration environment...",
+"Preparing security report..."
+];
+let progress=0,index=0,audioOn=false,ctx;
+function log(t){let d=document.createElement("div");d.textContent=t;$("logs").append(d);while($("logs").children.length>5)$("logs").firstChild.remove()}
+log("Session initialized.");
+const timer=setInterval(()=>{
+progress=Math.min(100,progress+Math.floor(Math.random()*7)+4);
+$("fill").style.width=progress+"%";
+$("percent").textContent=progress+"%";
+if(index<messages.length&&progress>index*14){log(messages[index++])}
+if(progress>=100){clearInterval(timer);setTimeout(stageWarning,1000)}
+},700);
+function stageWarning(){
+$("title").textContent="WARNING";
+$("subtitle").textContent="UNAUTHORIZED ACCESS DETECTED";
+$("status").textContent="CRITICAL ALERT";
+$("warning").style.display="block";
+$("panel").classList.add("glitch");
+let n=10;$("count").textContent=n;
+let c=setInterval(()=>{
+n--;$("count").textContent=n;
+if(n<=0){clearInterval(c);setTimeout(stageBreach,700)}
+},1000);
+}
+function stageBreach(){
+$("title").textContent="SYSTEM BREACHED";
+$("subtitle").textContent="CRITICAL SECURITY ALERT";
+$("panel").classList.add("glitch");
+beep(110,0.5);
+setTimeout(()=>{
+$("warning").style.display="none";
+$("count").style.display="none";
+$("title").textContent="SECURITY REPORT";
+$("subtitle").textContent="Simulation completed.";
+$("reveal").style.display="block";
+$("status").textContent="SAFE";
+},3000);
+}
+function beep(freq,duration){
+if(!audioOn)return;
+try{ctx=ctx||new(window.AudioContext||window.webkitAudioContext)();
+let o=ctx.createOscillator(),g=ctx.createGain();
+o.frequency.value=freq;o.connect(g);g.connect(ctx.destination);
+g.gain.setValueAtTime(.08,ctx.currentTime);
+g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);
+o.start();o.stop(ctx.currentTime+duration)}catch(e){}
+}
+$("sound").onclick=()=>{
+audioOn=!audioOn;$("sound").textContent=audioOn?"SOUND ON 🔊":"SOUND OFF 🔇";
+if(audioOn)beep(440,.2);
+};
+$("full").onclick=async()=>{
+try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){}
+};
+function celebrate(){
+$("reveal").innerHTML="<h2>😂 GOT YOU!</h2><p>Relax. Everything is perfectly safe.</p><p>Thanks for playing NIGHTMARE!</p>";
+$("panel").classList.remove("glitch");
+}
+</script>
+</body>
+</html>
